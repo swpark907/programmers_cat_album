@@ -7,8 +7,6 @@ export default function Loading ({$app, initialState}) {
   this.setState = nextState => {
 
     this.state = nextState;
-    console.log('Setting the state of Loading');
-    console.log('isLoading', this.state.isLoading)
     this.render();
   }
 
