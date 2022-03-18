@@ -15,7 +15,44 @@ function App($app) {
     isLoading: false,
   };
 
-  
+  const breadcrumb = new Breadcrumb({
+    $app,
+    initialState: this.state.depth,
+    onClick: async (index) => {
+      try {
+
+        const length = this.state.depth.length;
+        
+        if(index === length - 1){
+          return;
+        }
+        const nextDepth = this.state.depth.slice(0, index+1);
+
+        if (index === undefined) {
+          this.setState({
+            ...this.state,
+            nodes: cache.rootNodes,
+            depth: [],
+            isRoot: true,
+            isLoading: false,
+          });
+          return;
+        }
+
+        if(cache[this.state.depth[index].id]){
+          this.setState({
+            ...this.state,
+            depth: nextDepth,
+            nodes: cache[this.state.depth[index].id],
+          })
+          return;
+        }
+
+      } catch (e) {
+        // 에러처리
+      }
+    },
+  });
 
   const nodes = new Nodes({
     $app,
@@ -88,7 +125,6 @@ function App($app) {
     },
   });
 
-  
 
   const init = async () => {
     try {
