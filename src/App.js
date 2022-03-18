@@ -1,38 +1,44 @@
 import Nodes from "./Nodes.js";
 import Breadcrumb from "./Breadcrumb.js";
+import ImageView from "./ImageView.js";
 import { request } from "./api.js";
+import Loading from "./Loading.js";
 
-function App ( $app ) {
+const cache = {};
+
+function App($app) {
   this.state = {
     isRoot: false,
     nodes: [],
     depth: [],
+    selectedFilePath: null,
+    isLoading: false,
   };
 
-  const breadcrumb = new Breadcrumb({$app, initialState: this.state})
-  const nodes = new Nodes({$app, initialState: this.state});
-
-  this.setState = (nextState) => {
-    this.state = nextState;
-    breadcrumb.setState(nextState);
-    nodes.setState({
-      isRoot: this.state.isRoot,
-      nodes: this.state.nodes,
-    });
-  }
-
   const init = async () => {
-    try{
-      const rootNodes = await request()
+    try {
+      this.setState({
+        ...this.state,
+        isLoading: true,
+      });
+      const rootNodes = await request();
       this.setState({
         ...this.state,
         isRoot: true,
         nodes: rootNodes,
-      })
-    } catch(e) {
+      });
+      cache.rootNodes = rootNodes;
+    } catch (e) {
       console.log(e);
+    } finally {
+      this.setState({
+        ...this.state,
+        isLoading: false,
+      });
     }
-  }
+  };
+
+  init();
 }
 
 export default App;
