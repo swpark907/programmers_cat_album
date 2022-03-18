@@ -15,6 +15,11 @@ function App($app) {
     isLoading: false,
   };
 
+  const imageView = new ImageView({
+    $app,
+    initialState: this.state.selectedFilePath,
+  });
+
   const breadcrumb = new Breadcrumb({
     $app,
     initialState: this.state.depth,
