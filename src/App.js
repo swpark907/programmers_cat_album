@@ -130,6 +130,23 @@ function App($app) {
     },
   });
 
+  const loading = new Loading({
+    $app,
+    initialState: this.state.isLoading,
+  });
+
+  this.setState = (nextState) => {
+    this.state = nextState;
+    breadcrumb.setState(this.state.depth);
+    nodes.setState({
+      isRoot: this.state.isRoot,
+      nodes: this.state.nodes,
+    });
+    imageView.setState(this.state.selectedFilePath);
+    loading.setState({
+      isLoading: this.state.isLoading,
+    });
+  };
 
   const init = async () => {
     try {
